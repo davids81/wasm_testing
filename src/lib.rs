@@ -6,13 +6,7 @@ extern crate wasm_bindgen;
 
 use wasm_bindgen::prelude::*;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+
 
 #[wasm_bindgen]
 extern {
@@ -164,4 +158,14 @@ impl Universe {
             self.cells[idx] = Cell::Alive;
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+
 }
