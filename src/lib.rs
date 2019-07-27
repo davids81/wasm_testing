@@ -34,6 +34,15 @@ pub struct Universe {
 }
 
 #[wasm_bindgen]
+extern "C" {
+    pub type Document;
+    pub type SelectionManager;
+
+    #[wasm_bindgen(structural, method)]
+    pub fn GetSelectionManager(this: &Document) -> SelectionManager;
+}
+
+#[wasm_bindgen]
 impl Universe {
 
     pub fn tick(&mut self) {
@@ -109,6 +118,11 @@ impl Universe {
         }
     }
 
+    pub fn toggle_cell(&mut self, row: u32, column: u32) {
+        let idx = self.get_index(row, column);
+        self.cells[idx].toggle();
+    }
+
     pub fn render(&self) -> String {
         self.to_string()
     }
@@ -131,6 +145,18 @@ impl Universe {
     pub fn set_height(&mut self, height: u32) {
         self.height = height;
         self.cells = (0..self.width * height).map(|_i| Cell::Dead).collect();
+    }
+
+    // the following are the Draftsight additions to this class - for testing purposes...
+    pub fn select_dupes(doc: &Document) {
+        let selMgr = doc.GetSelectionManager();
+        let someSelmgr = Some(selMgr);
+
+        if let Some(ref sm) = someSelmgr {
+            alert("it works");
+        } else  {
+            alert("no worky");
+        }
     }
 }
 
@@ -156,6 +182,15 @@ impl Universe {
         for (row, col) in cells.iter().cloned() {
             let idx = self.get_index(row, col);
             self.cells[idx] = Cell::Alive;
+        }
+    }
+}
+
+impl Cell {
+    fn toggle(&mut self) {
+        *self = match *self {
+            Cell::Dead => Cell::Alive,
+            Cell::Alive => Cell::Dead,
         }
     }
 }

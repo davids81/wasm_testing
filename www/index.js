@@ -1,5 +1,5 @@
 import { Universe, Cell } from "WagDSTools";
-import { memory } from "WagDSTools/WagDSTools_bg"
+import { memory } from "WagDSTools/WagDSTools_bg";
 
 const CELL_SIZE = 5;
 const GRID_COLOR = "#CCCCCC";
@@ -45,9 +45,13 @@ const drawCells = () => {
 
     ctx.beginPath();
 
+    let highmark = 0;
     for (let row = 0; row < height; row++) {
         for (let col = 0; col < width; col++){
             const idx = getIndex(row, col);
+            if (idx > highmark) {
+                highmark = idx;
+            }
 
             ctx.fillStyle = cells[idx] === Cell.Dead ? DEAD_COLOR : ALIVE_COLOR;
             ctx.fillRect(col * (CELL_SIZE + 1) + 1, row * (CELL_SIZE + 1) + 1, CELL_SIZE, CELL_SIZE);
@@ -56,15 +60,66 @@ const drawCells = () => {
     ctx.stroke();
 };
 
+let animationId = null;
+
+const isPaused = () => {
+    return animationId === null;
+}
+
+const playPauseButton = document.getElementById("play-pause");
+const runBlockDupesButton = document.getElementById("doblockdupes");
+
+const play = () => {
+    playPauseButton.textContent = "⏸";
+    renderLoop();
+}
+
+const pause = () => {
+    playPauseButton.textContent = "▶";
+    cancelAnimationFrame(animationId);
+    animationId = null;
+}
+
+playPauseButton.addEventListener("click", event => {
+    if (isPaused()) {
+        play();
+    } else {
+        pause();
+    }
+});
+
+runBlockDupesButton.addEventListener("click", event =>  {
+    var mScript = new djScriptManager();
+    var mApp = mScript.getApplication();
+    var mDoc = mApp.GetActiveDocument();
+    universe.select_dupes(mDoc);
+});
+
+canvas.addEventListener("click", event =>  {
+    const boundingRect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / boundingRect.width;
+    const scaleY = canvas.height / boundingRect.height;
+
+    const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+    const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+
+    const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), height - 1);
+    const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), width - 1);
+
+    universe.toggle_cell(row, col);
+    drawGrid();
+    drawCells();
+});
+
 const renderLoop = () => {
     universe.tick();
     drawGrid();
     drawCells();
 
-    requestAnimationFrame(renderLoop);
+    animationId = requestAnimationFrame(renderLoop);
 };
 
 
 drawGrid();
 drawCells();
-requestAnimationFrame(renderLoop);
+play();

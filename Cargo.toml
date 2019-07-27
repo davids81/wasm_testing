@@ -1,5 +1,5 @@
 [package]
-name = "wagds_tools"
+name = "WagDSTools"
 version = "0.1.0"
 authors = ["DStockdale"]
 edition = "2018"

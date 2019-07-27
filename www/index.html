@@ -16,13 +16,17 @@
         justify-content: center;
       }
     </style>
+    <script type="text/javascript" src="http://localhost:7776/APISDK/djLibrary/djConnect.js"></script>
+    <script type="text/javascript" src="http://localhost:7776/APISDK/djLibrary/dsApplication.js"></script>
+    <script type="text/javascript" src="http://localhost:7776/APISDK/djLibrary/dsDocument.js"></script>
+    <script type="text/javascript" src="http://localhost:7776/APISDK/djLibrary/dsSelectionManager.js"></script>
   </head>
   <body>
     <canvas id="game-of-life-canvas"></canvas>
     <script src="./bootstrap.js"></script>
     <script>
       // function runMacro() {
-      //   wasm.excited_greeting("Nick");
+      //   wasm.excited_greeting("David");
       // }
 
 
@@ -31,7 +35,8 @@
     <!-- <form name="macroform">
       <button type="button" onclick="runMacro()">Run macro</button><br />
   </form> -->
-
+  <button id="play-pause"></button>
+  <button id="doblockdupes"></button>
 
   </body>
 </html>
